@@ -42,6 +42,15 @@ airbnb에 사용하는 수많은 기능들을 django가 많이 지원하기 때�
 
 ## section 02
 
+-
+
+```
+django-admin startproject airbnb-clone 대신에
+django-admin startproject config
+ createapp 으로 conversations,lists,reservatons,reviews,rooms, users 를 만든다.
+
+```
+
 - flake8 + black == 프리인터프리터/포멧터
 
 - linter는 파이썬이 인터프리터이다보니, 코드를 읽다가 애러나 나면 터짐. Linter는 미리 코드를 읽고 애러가 생길부분을 미리 경고해준다.
@@ -84,6 +93,7 @@ pip install black
 
 - Django의 기본 user모델을 커스터마이징 하여 사용합니다.
 - 모델에서 텍스트필드에 3가지 선택권을 줍니다.
+- admin에 DB 디스플레이를 설정합니다.
 
 ```
 from django.contrib.auth.models import AbstractUser
