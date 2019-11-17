@@ -120,6 +120,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 ## section 4
 
+- 4.1
 - core라는 앱을 만들었고, 여기서 모든 앱에서 사용되는 공통된 추상모델을 정의할꺼임. room의 모델은 이를 상속받는다.
 - django countries 라는 오픈소스를 통해서 나라관련 데이터필드를 만들어 줄것이다.
 
@@ -138,3 +139,8 @@ class Room(core_models.TimeStampedModel):
 
 
 ```
+
+- rooms 모델 완성 및 admin site 등록 완료, host는 Foreign 키 이용
+- 4.2
+- 4.5
+- verbose_name 메타 클래스에 추가해서, 자동으로 클래스 이름이 바뀌는것을 컨트롤 한다.

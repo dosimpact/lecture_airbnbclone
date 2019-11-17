@@ -32,3 +32,7 @@ class User(AbstractUser):
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, blank=True)
     superhost = models.BooleanField(default=False)
 
+    # 모든 클래스는 자기를 string으로 표현하는 method가 있다. __str__을 정의해주면, adminsite에서 반영.~!
+    def __str__(self):
+        return self.username
+
