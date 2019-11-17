@@ -118,4 +118,23 @@ class CustomUserAdmin(admin.ModelAdmin):
     #bio = models.TextField(null=True)
 ```
 
-## section4
+## section 4
+
+- core라는 앱을 만들었고, 여기서 모든 앱에서 사용되는 공통된 추상모델을 정의할꺼임. room의 모델은 이를 상속받는다.
+- django countries 라는 오픈소스를 통해서 나라관련 데이터필드를 만들어 줄것이다.
+
+```
+from django.db import models #1.장고 관련 된것을 모두 임포트
+from core import models as core_models #2. 서드파티 패키지 임포트
+from django_countries.fields import CountryField #3. 그다음 내가 만든것 임포트
+
+
+class Room(core_models.TimeStampedModel):
+    """ Room Models """
+
+    name = models.CharField(max_length=140)
+    description = models.TextField()
+    country = CountryField()
+
+
+```
