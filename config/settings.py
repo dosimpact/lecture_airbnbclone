@@ -27,10 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-# Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,6 +35,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+# 반드시 createapp을 했으면 추가할것!
+PROJECT_APPS = [
+    "users.apps.UsersConfig",
+]
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -113,3 +115,5 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# 기본 USER 모델을 다음으로 대처한다.
+AUTH_USER_MODEL = "users.User"
