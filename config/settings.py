@@ -35,9 +35,12 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+THIRD_PARTY_APPS = []
 # 반드시 createapp을 했으면 추가할것!
 PROJECT_APPS = [
+    "core.apps.CoreConfig",
     "users.apps.UsersConfig",
+    "rooms.apps.RoomsConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
 
