@@ -10,3 +10,4 @@ class TimeStampedModel(models.Model):
     # 추상 Ture라면 DB로 모델이 안들어간다.
     class Meta:
         abstract = True
+
