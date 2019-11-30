@@ -1,4 +1,4 @@
-# section 03
+# section 04
 
 # 4.0 TimeStampedModel (7:16)\
 
@@ -149,6 +149,26 @@ class HouseRule(AbstractItem):
 
 # 4.5 Meta Class and Photos Model (9:43)
 
+- admin패널에서 표시되는 모델이름은, 원래이름 + s가 붙고, CamelCase로 변환된다. 이를 메타클래스를 통해서 바꿀 수 있다.
+
+```
+class RoomType(AbstractItem):
+    """ RoomType Model Definition"""
+
+    class Meta:
+        verbose_name = "Room Type" # CamelCase변경, 이 이름에서 s가 붙는다.
+        ordering = ["created"] # 다음 필드값으로 정렬
+
+class Amenity(AbstractItem):
+    """ Amenity model Definition """
+
+    class Meta:
+        verbose_name_plural = "Amenities" # 다음 이름으로 모델을 표기한다. s는 여기서 더이상 붙지 않는다.
 ```
 
+- model은 다음과 같이 string형태로 써서, 구지 다른 어플리케이션을 임포트하고, 또 모델의 순서를 따를 필요가 없다.
+
+```
+   # host = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
+    host = models.ForeignKey("users.User", on_delete=models.CASCADE)
 ```
