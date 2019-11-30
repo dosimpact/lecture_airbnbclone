@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "C:\\Anaconda3\\envs\\airbnb\\python.exe",
+  "python.pythonPath": "C:\\Users\\Dos\\AppData\\Local\\Continuum\\anaconda3\\envs\\airbnb\\python.exe",
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
