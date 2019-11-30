@@ -1,6 +1,6 @@
 # section 06
 
-# 6.0 Room Admin Panel (11:01)
+# 6.0 Room Admin Panel
 
 [참조 문서 ](https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields)
 
