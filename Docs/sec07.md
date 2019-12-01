@@ -108,6 +108,42 @@ AttributeError: 'User' object has no attribute 'room_set'
 - 모든 1:N, N:N 에 related_name 의 항목을 추가했다.
 - N:N 관계에서 forward N:N은 그냥 속성값으로 접근 가능.
 
+```python
+class Review(core_models.TimeStampedModel):
+    """ Review Model Definition """
+
+    review = models.TextField()
+    accuracy = models.IntegerField()
+    communication = models.IntegerField()
+    cleanliness = models.IntegerField()
+    location = models.IntegerField()
+    check_in = models.IntegerField()
+    value = models.IntegerField()
+    user = models.ForeignKey(
+        "users.User", related_name="reviews", on_delete=models.CASCADE
+    )
+    room = models.ForeignKey(
+        "rooms.Room", related_name="reviews", on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        # 장고 파이썬 3 str문법으로 다음이 가능하다.
+        return f"{self.review} - {self.room}"
+```
+
 # 7.3 Finishing the Room Admin (4:41)
 
-& C:/Users/Dos/AppData/Local/Continuum/anaconda3/envs/airbnb/python.exe c:/Users/Dos/Documents/airbnb/manage.py shell
+```
+@admin.register(models.RoomType, models.Facility, models.Amenity, models.HouseRule)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ("name", "used_by") #used_by라는 display속성을 추가하고
+
+    def used_by(self, obj):
+        return obj.rooms.count() #해당 내용을 정의한다. 해당 방타입,편의시설 등등 .. 을 참조하는 room들을 알아낸다.
+```
+
+```
+    def count_photos(self, obj):
+        return obj.photos.count() #obj에서 혹시나 있을수 있는 photos를 참조해 보았고, 그 수를 반환한다.
+
+```

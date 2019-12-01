@@ -4,7 +4,10 @@ from . import models
 
 @admin.register(models.RoomType, models.Facility, models.Amenity, models.HouseRule)
 class ItemAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "used_by")
+
+    def used_by(self, obj):
+        return obj.rooms.count()
 
 
 @admin.register(models.Room)
@@ -38,6 +41,7 @@ class RoomAdmin(admin.ModelAdmin):
         "check_out",
         "instant_book",
         "count_amenities",
+        "count_photos",
     )
     # 필드에 대한 필터
     list_filter = (
@@ -58,6 +62,9 @@ class RoomAdmin(admin.ModelAdmin):
         return obj.amenity.count()
 
     count_amenities.short_description = "count_amenities sexy"
+
+    def count_photos(self, obj):
+        return obj.photos.count()
 
 
 @admin.register(models.Photo)
