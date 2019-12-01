@@ -263,6 +263,20 @@ if settings.DEBUG:
 
 # 8.5 Photo Admin (9:07)
 
+- admin패널에 이미지 출력하기.
+
+```
+from django.utils.html import mark_safe #출력으로 script같은것을 장고는 허용하지 않는다. 만약 안전을 보장하면, 다음으로 HTML코드를 출력한다.
+...
+    list_display = ("__str__", "get_thumbnail")
+
+    def get_thumbnail(self, obj):
+    #obj를 꺼내보면 <class 'django.db.models.fields.files.ImageFieldFile'> 이다. string인줄 알았는데 type을 보니 obj이고, obj.file.url|size|width|height|... 등등의 많은 정보가 있다.
+        return mark_safe(f'<img width="50px" src="{obj.file.url}" />')#<script>와 같은 input을 준다면 admin의 정보들이 해킹당할수있다.
+
+    get_thumbnail.short_description = "Thumbnail"
+```
+
 # 8.6 raw_ids and Inline Admin (7:59)
 
 # 8.7 Explaining Python super() (8:48)
