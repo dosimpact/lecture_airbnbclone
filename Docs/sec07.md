@@ -60,6 +60,54 @@ mappingproxy({'__module__': 'users.models', '__doc__': ' Custom User Model ', 'G
 
 # 7.1 Practicing the Django ORM (11:15)
 
+- 리버스 1:N
+
+```
+>>> from users.models import User
+>>> happy = User.objects.get(username = "happy")
+>>> happy.review_set.all() # 외래키 접근 by 리버스 1:N
+<QuerySet [<Review: i love it - Cottage by the sea Walk to beach>]>
+>>> happy.room_set.all() # 외래키 접근 by 리버스 1:N
+<QuerySet [<Room: Cottage by the sea Walk to beach>]>
+```
+
+- related_name="rooms"
+
+```
+    host = models.ForeignKey(
+        "users.User", related_name="rooms", on_delete=models.CASCADE # related_name으로 User에서 접근할때 접근자를 지정해준다. 이 통로로만 접근이 가능!!
+    )
+```
+
+```
+
+>>> from users.models import User
+>>> happy = User.objects.get(username = "happy")
+>>> happy.room_set.all()  # 외래키 접근 by 리버스 1:N 기본 통로 페쇄
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'User' object has no attribute 'room_set'
+>>> happy.rooms.all() # 외래키 접근 by 리버스 1:N
+<QuerySet [<Room: Cottage by the sea Walk to beach>]>
+>>>
+```
+
+- forward N:N
+
+```
+>>> from rooms.models import Room
+>>> inst1 = Room.objects.get(pk = 1)
+>>> inst1
+<Room: Cottage by the sea Walk to beach>
+>>> inst1.facility #그냥 속성을 통해서 접근
+<django.db.models.fields.related_descriptors.create_forward_many_to_many_manager.<locals>.ManyRelatedManager object at 0x00000256CA440748>
+```
+
 # 7.2 Many to Many \_sets (2:50)
 
+- 모든 1:N, N:N 에 related_name 의 항목을 추가했다.
+- N:N 관계에서 forward N:N은 그냥 속성값으로 접근 가능.
+
 # 7.3 Finishing the Room Admin (4:41)
+
+& C:/Users/Dos/AppData/Local/Continuum/anaconda3/envs/airbnb/python.exe c:/Users/Dos/Documents/airbnb/manage.py shell
