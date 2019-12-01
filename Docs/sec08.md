@@ -177,7 +177,7 @@ class List(core_models.TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def count_rooms(self):
+    def count_rooms(self): #위시 리스트에서는 총 방의 갯수를 리턴.
         return self.rooms.count()
 
     count_rooms.short_description = "Number of Rooms"
@@ -188,16 +188,78 @@ class List(core_models.TimeStampedModel):
 ```
 @admin.register(models.List)
 class ListAdmin(admin.ModelAdmin):
-    list_display = ("name", "user", "count_rooms")
+    list_display = ("name", "user", "count_rooms") #inst 보여주기
 
-    search_fields = ("name",)
+    search_fields = ("name",) #이름으로 검색 icontain
 
-    filter_horizontal = ("rooms",)
+    filter_horizontal = ("rooms",) #위시 리스트 room 쉽게 고르게~
 ```
 
 # 8.3 Configuring User Uploads part One (7:07)
 
+[참조 MEDIA ROOT ](https://docs.djangoproject.com/en/2.2/ref/settings/#media-root)
+
+- gitignore에 다음추가하기
+
+```
+uploads/
+```
+
+- MEDIA_ROOT를 통해 파일(이미지)들이 저장되는 기본위치 설정 , os.path.join은 두 인자를 붙여준다. uploads는 파일 명이라 생각하면 됨.
+
+```
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+```
+
+- ImageField는 FileField를 상속받았고, upload_to를 통해, 파일이 지정되는 경로를 설정할수있다. ( 기본은 MEDIA ROOT 에서 )
+
+```
+class Photo(core_models.TimeStampedModel):
+    """ Photo Model Definition """
+
+    caption = models.CharField(max_length=80)
+    file = models.ImageField(upload_to = "room_phptos")
+    room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.caption
+```
+
+-
+
+```
+    avatar = models.ImageField(upload_to="avatars", blank=True)
+```
+
 # 8.4 Configuring User Uploads part Two (13:02)
+
+- MEADIA ROOT 설정
+
+```
+#원래 파일의 경로는 이거다.
+http://127.0.0.1:8000/admin/users/user/1/change/avatars/%EB%82%B4%EC%83%81%ED%8C%90.png
+
+MEDIA_URL = "media/"  # 파일(사진)을 요청했을때, url에 media/ 접두 해준다. 상대경로로 ,기존 url에 붙여진다.
+http://127.0.0.1:8000/admin/users/user/1/change/media/avatars/%EB%82%B4%EC%83%81%ED%8C%90.png
+
+MEDIA_URL = "/media/"  # /로 시작해서 , 절대경로로 새롭게 routing된다, media
+http://127.0.0.1:8000/media/avatars/%EB%82%B4%EC%83%81%ED%8C%90.png
+```
+
+- static호출에서 media에 접근하고 싶은데, 어디로 갈지
+
+```
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [path("admin/", admin.site.urls)]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    #MEDIA_URL로 접근 media 파일로 접근을 하려함., static이 MEDIA_ROOT로 가라 알려준다.
+```
+
+- 반드시 static 폴더를 서버에서 처리하지 마라. 사용자가 많아질수록 디스크 공간을 많이 쓰기땨문에, 반드시 database 는 따로 둬라.
 
 # 8.5 Photo Admin (9:07)
 

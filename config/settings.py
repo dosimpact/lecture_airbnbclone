@@ -125,3 +125,7 @@ STATIC_URL = "/static/"
 
 # 기본 USER 모델을 다음으로 대처한다.
 AUTH_USER_MODEL = "users.User"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+
+MEDIA_URL = "/media/"  # 파일(사진)을 요청했을때, url에 media/ 접두 해준다.
