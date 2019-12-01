@@ -42,6 +42,7 @@ class RoomAdmin(admin.ModelAdmin):
         "instant_book",
         "count_amenities",
         "count_photos",
+        "total_rating",
     )
     # 필드에 대한 필터
     list_filter = (

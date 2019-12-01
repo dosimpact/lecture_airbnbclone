@@ -23,3 +23,16 @@ class Review(core_models.TimeStampedModel):
         # 장고 파이썬 3 str문법으로 다음이 가능하다.
         return f"{self.review} - {self.room}"
 
+    # 모델에서 평균을 구하는 함수를 작성함. => 어드민패널,콘솔,프론트엔드 다 사용이 가능하다.
+    def rating_average(self):
+        avg = (
+            self.accuracy
+            + self.communication
+            + self.cleanliness
+            + self.location
+            + self.check_in
+            + self.value
+        )
+        return round(avg, 2)
+
+    rating_average.short_description = ".AVG"
