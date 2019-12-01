@@ -17,7 +17,7 @@ vs code -> 컨트롤 쉬프트 P => select python interpretor djangostack ~
 
 - Flask vs Django  
   Flask나 Pyrmaid 매우 간단하고 쉽게 웹 어플리케이션을 만들 수 있다. Flask는 웹서버 만드는 것을 많이 도와준다.  
-  하지만 reinvent the wheel 데이터베이스 유저인증 form 로그인 로그아웃, 관리자 패널 등등  
+  하지만 reinvent the wheel - 데이터베이스, 유저인증, form, 로그인, 로그아웃, 관리자 패널 등등  
   다시 직접 만들어야 하는 많은 부분이 있다.
 
   Django는 거대한 프레임 워크라서 공통적으로 필요한것들을 전부 넣었다. 그래서 처음부터 많은것들이 포함되어 있다.  
