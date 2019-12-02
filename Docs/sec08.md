@@ -246,6 +246,14 @@ MEDIA_URL = "/media/"  # /로 시작해서 , 절대경로로 새롭게 routing�
 http://127.0.0.1:8000/media/avatars/%EB%82%B4%EC%83%81%ED%8C%90.png
 ```
 
+```
+MEDIA_URL = "/media/"  # 파일(사진)을 요청했을때, url에 /media/ 접두 해준다.
+새로운 경로로 request ->  Urlpattern을 통해 숨겨져있는 파일들로 접근을 할 수 있게된다.
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads") # 사실 uploads에 파일들이 있었음.
+
+```
+
 - static호출에서 media에 접근하고 싶은데, 어디로 갈지
 
 ```

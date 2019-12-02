@@ -111,11 +111,160 @@ class Command(BaseCommand):
 
 # 9.3 seed_rooms part One (11:13)
 
+- room - model 애러 픽스
+
+```
+    def total_rating(self):
+        all_reviews = self.reviews.all()
+        all_ratings = 0
+        if len(all_reviews) != 0: #그 방에 리뷰가 없는경우는? 0으로 나누게 되는데?
+            for review in all_reviews:
+                all_ratings += review.rating_average()
+            return all_ratings / len(all_reviews)
+        return 0
+```
+
+- room 시드
+
+```
+import random #랜덤함수 | random.choice(쿼리셋) | random.randint(1,5)
+from django.core.management.base import BaseCommand, CommandError
+from django_seed import Seed
+#외래키는 django_seed가 저절로 못하기 떄문에, 지금 수동으로 작업함.
+from rooms import models as room_models
+from users import models as user_models
+
+
+class Command(BaseCommand):
+    help = "This commnad creates room"
+
+    def add_arguments(self, parser):
+        parser.add_argument("--number", default=2, type=int, help="create seed room")
+
+    def handle(self, *args, **options):
+        number = options.get("number")
+        all_users = user_models.User.objects.all()
+        room_types = room_models.RoomType.objects.all()
+
+        seeder = Seed.seeder()
+        seeder.add_entity(
+            room_models.Room,
+            number,
+            {
+                #lambda x | x는 Room을 의미..
+                "name": lambda x: seeder.faker.address(),
+                "host": lambda x: random.choice(all_users),
+                "room_type": lambda x: random.choice(room_types),
+                "guests": lambda x: random.randint(1, 20),
+                "price": lambda x: random.randint(1, 300),
+                "beds": lambda x: random.randint(1, 5),
+                "bedrooms": lambda x: random.randint(1, 5),
+                "baths": lambda x: random.randint(1, 5),
+            },
+        )
+        seeder.execute()
+        self.stdout.write(self.style.SUCCESS(f"{number} users created! "))
+```
+
 # 9.4 seed_rooms part Two (10:30)
+
+- faker를 이용해서, 랜덤 문장을 출력하는 함수 알아냄 | faker.sentence()
+  [참조 faker](https://faker.readthedocs.io/en/master/index.html)
+
+- flatten은 여러겹 쌓인 리스트를 하나의 리스트로 리턴한다.
+
+```
+from django.contrib.admin.utils import flatten
+```
+
+```
+        created_photos = seeder.execute() #방에 시드를 준결과, id들이 반환됨.
+
+        print(created_photos)  # {<class 'rooms.models.Room'>: [5]} # 딕셔너리형태 | 모델1 : [id list], 모델2....
+        print(created_photos.values())  # dict_values([[5]]) #value만 뽑으면 list안 list
+        print(list(created_photos.values()))  # [[5]] #
+        print(flatten(list(created_photos.values())))  # [5] #flatten 이용
+
+        created_clean = flatten(list(created_photos.values()))
+        for pk in created_clean:
+            room = room_models.Room.objects.get(pk=pk) #방의 id로 순회하면서
+            for i in range(3, random.randint(10, 17)): #다음의 사진을 만들면서, 방을 연결시켜준다.
+                room_models.Photo.objects.create(
+                    caption=seeder.faker.sentence(),
+                    room=room,
+                    file=f"room_photos/{random.randint(1, 31)}.webp", #파일 이름은 uploads안의 폴더 이름.
+                )
+        self.stdout.write(self.style.SUCCESS(f"{number} users created! "))
+```
 
 # 9.5 seed_rooms part Three (5:49)
 
+- room - seed | amenities , facilities , rules 추가
+
+```
+        for pk in created_clean:
+            room = room_models.Room.objects.get(pk=pk)
+            for i in range(3, random.randint(10, 30)):
+                room_models.Photo.objects.create(
+                    caption=seeder.faker.sentence(),
+                    room=room,
+                    file=f"room_photos/{random.randint(1, 31)}.webp",
+                )
+            for a in amenities:
+                magic_number = random.randint(0, 15)
+                if magic_number % 2 == 0:
+                    room.amenity.add(a)
+            for f in facilities:
+                magic_number = random.randint(0, 15)
+                if magic_number % 2 == 0:
+                    room.facility.add(f)
+            for r in rules:
+                magic_number = random.randint(0, 15)
+                if magic_number % 2 == 0:
+                    room.house_rules.add(r)
+        self.stdout.write(self.style.SUCCESS(f"{number} users created! "))
+```
+
 # 9.6 seed_reviews (5:34)
+
+```
+import random
+from django.core.management.base import BaseCommand
+from django_seed import Seed
+from reviews import models as review_models
+from rooms import models as room_models
+from users import models as user_models
+
+
+class Command(BaseCommand):
+    help = "This commnad creates reviews"
+
+    def add_arguments(self, parser):
+        parser.add_argument("--number", default=2, type=int, help="create seed reviews")
+
+    def handle(self, *args, **options):
+        number = options.get("number")
+        seeder = Seed.seeder()
+
+        users = user_models.User.objects.all()
+        rooms = room_models.Room.objects.all()
+        seeder.add_entity(
+            review_models.Review,
+            number,
+            {
+                "accuracy": lambda x: random.randint(0, 6),
+                "communication": lambda x: random.randint(0, 6),
+                "cleanliness": lambda x: random.randint(0, 6),
+                "location": lambda x: random.randint(0, 6),
+                "check_in": lambda x: random.randint(0, 6),
+                "value": lambda x: random.randint(0, 6),
+                "room": lambda x: random.choice(rooms),
+                "user": lambda x: random.choice(users),
+            },
+        )
+        seeder.execute()
+        self.stdout.write(self.style.SUCCESS(f"{number} reviews created!"))
+```
 
 # 9.7 seed_lists (6:55)
 
