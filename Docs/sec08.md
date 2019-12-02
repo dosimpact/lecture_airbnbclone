@@ -279,6 +279,98 @@ from django.utils.html import mark_safe #출력으로 script같은것을 장고�
 
 # 8.6 raw_ids and Inline Admin (7:59)
 
+[참조 docs inline ](https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#django.contrib.admin.InlineModelAdmin)
+
+- room admin : room admin패널에서 다른 패널를 인라인 해서 보여주고 싶을때.~
+
+```
+class PhotoInline(admin.TabularInline):
+    model = models.Photo
+```
+
+```
+class RoomAdmin(admin.ModelAdmin):
+    # admin 패널에서 보일 필드들을 적어준다.
+    inlines = (PhotoInline,)
+```
+
+- room admin : 외래키 리스트 -> 외래키 검색 저장
+
+```
+    raw_id_fields = ("host",) #host 외래키를 리스트형식으로 고르는게 아님| 검색을 통해서 지정할수 있도록 | 사람이 많아지면 불편해서
+```
+
 # 8.7 Explaining Python super() (8:48)
 
+- django snippets 익스텐션 설치, 모델에서 save만 처도 -> 자동완성
+
+```
+    def save(self, *args, **kwargs):
+
+       super(ModelName, self).save(*args, **kwargs) # Call the real save() method
+```
+
+- \*args \*\*kwargs
+
+```
+# *args **kwargs
+def plus(a, b, *args, **kwargs):
+    print(args)
+    print(kwargs)
+    print(a + b)
+
+
+plus(1, 2)
+plus(1, 2, 3, 4, 5)
+plus(1, 2, 3, 4, 5, z1=1, z2=2, z3=3)  # a= 1 이런식으로 주면 모호함(애러)
+```
+
 # 8.8 Intercepting Model save() and admin_save() (9:51)
+
+- 모델에서 save되는것 가로채기
+  [참조](https://docs.djangoproject.com/en/2.2/topics/db/models/#overriding-predefined-model-methods)
+
+```python
+Overriding predefined model methods¶
+There’s another set of model methods that encapsulate a bunch of database behavior that you’ll want to customize. In particular you’ll often want to change the way save() and delete() work.
+
+You’re free to override these methods (and any other model method) to alter behavior.
+
+A classic use-case for overriding the built-in methods is if you want something to happen whenever you save an object. For example (see save() for documentation of the parameters it accepts):
+
+from django.db import models
+
+class Blog(models.Model):
+    name = models.CharField(max_length=100)
+    tagline = models.TextField()
+
+    def save(self, *args, **kwargs):
+        do_something()
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+        do_something_else()
+```
+
+```
+#room model
+    def save(self, *args, **kwargs): #룸 모델에서, city를 seoul로 저장하면 알아서 Seoul로 바꿈 |
+        self.city = str.capitalize(self.city)
+        super().save(*args, **kwargs)
+```
+
+- 어드민에서 save되는것 가로채기 -> 그리고 모델의 save()가 호출된다.| admin패널에서 데이터를 수정시, 사용자에게 email알림들을 할때|
+
+[참조](https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-methods)
+
+```
+ModelAdmin.save_model(request, obj, form, change)[source]¶
+The save_model method is given the HttpRequest, a model instance, a ModelForm instance, and a boolean value based on whether it is adding or changing the object. Overriding this method allows doing pre- or post-save operations. Call super().save_model() to save the object using Model.save().
+
+For example to attach request.user to the object prior to saving:
+
+from django.contrib import admin
+
+class ArticleAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        obj.user = request.user
+        super().save_model(request, obj, form, change)
+```

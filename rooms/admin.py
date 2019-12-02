@@ -11,13 +11,18 @@ class ItemAdmin(admin.ModelAdmin):
         return obj.rooms.count()
 
 
+class PhotoInline(admin.TabularInline):
+    model = models.Photo
+
+
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
     # admin 패널에서 보일 필드들을 적어준다.
+    inlines = (PhotoInline,)
     fieldsets = (
         (
             "Basic Info",
-            {"fields": ("name", "description", "country", "price", "address")},
+            {"fields": ("name", "description", "country", "city", "price", "address")},
         ),
         ("Times", {"fields": ("check_in", "check_out", "instant_book")}),
         ("Spaces", {"fields": ("guests", "beds", "bedrooms", "baths")}),
@@ -28,6 +33,7 @@ class RoomAdmin(admin.ModelAdmin):
                 "fields": ("amenity", "facility", "house_rules"),
             },
         ),
+        ("Last Details", {"fields": ("host",)}),
     )
     list_display = (
         "name",
@@ -56,6 +62,7 @@ class RoomAdmin(admin.ModelAdmin):
         "city",
         "country",
     )
+    raw_id_fields = ("host",)
     # 검색에 대한 설정 , =city는 완전일치 | ^는 앞에서부터 일치 여부 | host__username 은 host 외래키 __ 외래키모델접근자 username 모델속성
     search_fields = ("=city", "^host__username")
     filter_horizontal = ("amenity", "facility", "house_rules")
