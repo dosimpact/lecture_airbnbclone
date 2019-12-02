@@ -36,6 +36,27 @@ class Command(BaseCommand): #이 클래스에서 명령어 인자와 로직 구�
 
 # 9.1 seed_amenities command (7:05)
 
+- 실제 에어비엔비에서 데이터 가져와서 시드 데이터 주기. objects.create(name = a)
+
+```
+from django.core.management.base import BaseCommand, CommandError
+from rooms.models import Amenity
+
+
+class Command(BaseCommand):
+    help = "This seed amenities in airbnb site"
+    def handle(self, *args, **options):
+        amenities = [
+            "Air conditioning",
+            ...
+            "TV",
+        ]
+        for a in amenities:
+            Amenity.objects.create(name=a)
+        self.stdout.write(self.style.SUCCESS("Amenities created!!"))
+
+```
+
 # 9.2 seed_everything and seed_users (14:12)
 
 # 9.3 seed_rooms part One (11:13)
