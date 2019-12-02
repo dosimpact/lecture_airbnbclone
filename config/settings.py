@@ -35,7 +35,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-THIRD_PARTY_APPS = ["django_countries"]
+THIRD_PARTY_APPS = ["django_countries", "django_seed"]
 # 반드시 createapp을 했으면 추가할것!
 PROJECT_APPS = [
     "core.apps.CoreConfig",

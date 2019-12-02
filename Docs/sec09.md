@@ -59,6 +59,56 @@ class Command(BaseCommand):
 
 # 9.2 seed_everything and seed_users (14:12)
 
+- facilities 도 앞에서 똑같이 시드 주면 된다.
+
+```python
+from django.core.management.base import BaseCommand, CommandError
+from rooms.models import Facility
+
+
+class Command(BaseCommand):
+    help = "This seed facilities in airbnb site"
+
+    def handle(self, *args, **options):
+        facilities = [
+            "Private entrance",
+            "Paid parking on premises",
+            "Paid parking off premises",
+            "Elevator",
+            "Parking",
+            "Gym",
+        ]
+        for f in facilities:
+            Facility.objects.create(name=f)
+        self.stdout.write(self.style.SUCCESS(f"{len(facilities)} facilities created!"))
+```
+
+- django_seed 서드파트 설치 | setting에 추가.
+  [django_seed](https://github.com/Brobin/django-seed)
+
+```python
+from django.core.management.base import BaseCommand, CommandError
+from django_seed import Seed
+from users.models import User
+
+
+class Command(BaseCommand):
+    help = "This commnad creates Users"
+    #number인자를 | type = int | default = 2 |
+    def add_arguments(self, parser):
+        parser.add_argument("--number", default=2, type=int, help="create seed user")
+    #option = dictionary => | get("number") | seed doc참고해 작성함.
+    def handle(self, *args, **options):
+        number = options.get("number")
+        seeder = Seed.seeder()
+
+        seeder.add_entity(User, number, {"is_staff": False, "is_superuser": False})
+        seeder.execute()
+        self.stdout.write(self.style.SUCCESS(f"{number} users created! "))
+
+
+```
+
 # 9.3 seed_rooms part One (11:13)
 
 # 9.4 seed_rooms part Two (10:30)
