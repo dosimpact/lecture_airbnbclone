@@ -77,4 +77,27 @@ def all_rooms(request):
 
 # 10.3 Extending Templates part One (8:46)
 
+- extension django template 설치해서 html 자동완성 쓸것. vs code아래 보면 html 을 django html template로 인식 | template 문법 자동완성기능 쓰기!!
+
+```
+#- 파일구조 :
+ templates | base.html
+ templates | rooms | home.html
+def all_rooms(request):
+    rooms = models.Room.objects.all()
+    return render(request, "rooms/home.html", context={"rooms": rooms})
+
+```
+
+```
+
+{% extends "base.html" %}
+
+
+{% for room in rooms  %}
+  <h4> {{room.name }}</h4>
+{% endfor %}
+
+```
+
 # 10.4 Extending Templates part Two and Includes (8:59)
