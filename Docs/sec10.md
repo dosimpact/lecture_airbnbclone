@@ -1,0 +1,80 @@
+# section 10
+
+# 10.0 Introduction to Urls and Views (8:02)
+
+- url 과 view , 많은 url request가 올텐데, 라우팅을 잘 해야됨 | include(url 라우팅 !)
+
+```
+#config - urls
+from django.contrib import admin
+from django.urls import path, include #include를 통해, url를 라우팅 한다.
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path("", include("core.urls")), # " 빈 url요청시, core.urls로 가라,
+    path("admin/", admin.site.urls)
+    ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+```
+#core - urls
+from django.urls import path
+from rooms import views as room_views #실질적인 뷰 클래스르 가져와서
+
+app_name = "core"
+
+urlpatterns = [path("", room_views.all_rooms, name="home")] # 클래스.함수 로 view 연결!!
+```
+
+```
+#rooms - views
+from django.shortcuts import render
+def all_rooms(request):
+    pass
+```
+
+# 10.1 HttpResponse and render (6:30)
+
+# 10.2 Introduction to Django Templates (9:14)
+
+- BASE_DIR | templates | conversatinos,emails ... base.html, 404.html | all_room.html 이런식으로, 템플릿을 모아둔 폴덜르 지정
+
+```cs
+TEMPLATES = [
+    {
+    ....
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+         #원래 내가 알던지식으로는 각 application마다 template를 보관했는데, 너무 불편하니까 | 이렇게 새로운 폴더를 지정하는거지.
+```
+
+- httpResponse를 통해 내용을 전달해도됨 | render는 (request | html | context... )를 통해 html를 만들어 제공한다.
+
+```python
+from datetime import datetime
+from django.shortcuts import render
+
+def all_rooms(request):
+    now = datetime.now()
+    hungry = True
+    return render(request, "all_rooms.html", context={"now": now, "hungry": hungry})
+```
+
+- html 템플릿 내용~
+
+```cs
+<h1>hellow !~</h1>
+<h4>NOW TIME : {{now}}</h4>
+<h3>
+  {% if hungry %} I m hungry ~ {% else %} im ok~{% endif %}
+</h3>
+
+```
+
+# 10.3 Extending Templates part One (8:46)
+
+# 10.4 Extending Templates part Two and Includes (8:59)
