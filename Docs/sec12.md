@@ -115,4 +115,27 @@ def room_detail(request, pk):
 
 # 12.3 Http404() (4:33)
 
+- 디버그 모드는 False, allowed host는 "\*"로 다 접속 가능하게 한다.~
+- 서버애러는 500 , NOT Found는 404 이다.
+- url난동을 부리면 raise를 해준다. http404를, 만약 이처리를하지않고, 예외가 발생하면 서버애러->500이다.
+
+```
+from django.http import Http404
+    raise Http404()
+```
+
+- 반드시 404.html이름으로 templates폴더에 있어야 한다.
+
+```
+{% extends "base.html" %}
+
+{% block page_name %}
+  ERROR
+{% endblock page_name %}
+
+{% block content %}
+    <h1> NOT FOUND !! </h1>
+{% endblock content %}
+```
+
 # 12.4 Using DetailView CBV (6:33)
