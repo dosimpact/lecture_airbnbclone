@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.urls import reverse
 from django.http import Http404
 from . import models
@@ -12,6 +12,11 @@ class HomeView(ListView):
     paginate_orphans = 5
     ordering = "created"
     page_kwarg = "page"
+
+
+class RoomDetail(DetailView):
+    model = models.Room
+    pk_url_kwarg = "pk"
 
 
 def room_detail(request, pk):

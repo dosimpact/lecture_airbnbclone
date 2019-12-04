@@ -138,4 +138,36 @@ from django.http import Http404
 {% endblock content %}
 ```
 
+```
+DEBUG = False
+
+ALLOWED_HOSTS = "*"
+```
+
 # 12.4 Using DetailView CBV (6:33)
+
+- detail뷰에서 model은 room또는 object 로 template에서 사용가능
+- detail뷰에서 자동으로 pk를 인자를 받고, room에서 그를 얻어옴
+
+### http://localhost:8000/rooms/52 요청시 pk = 52
+
+### rooms - urls
+
+```python
+urlpatterns = [path("<int:pk>", views.RoomDetail.as_view(), name="detail")] #pk는 장룰
+```
+
+### rooms - views
+
+```python
+class RoomDetail(DetailView):
+    model = models.Room #쿼리셋 지정
+    pk_url_kwarg = "pk" #자동으로 pk라는 장룰변수로 쿼리를 얻어온다.
+```
+
+### templates - room_detail.html (명명 장룰)
+
+```html
+<h1>{{object.name}}</h1>
+<h3>{{room.description}}</h3>
+```
