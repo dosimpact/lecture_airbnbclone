@@ -101,3 +101,63 @@ def all_rooms(request):
 ```
 
 # 10.4 Extending Templates part Two and Includes (8:59)
+
+- templates파일 구조
+
+templates | base.html
+templates | partials | footer.html , header.html
+templates | rooms | home.html
+
+- footer.html + header.html ===> base로 include ===> home로 extends
+
+```html
+footer.html
+<footer>&copy; Nomad airbnb</footer>
+```
+
+```html
+header.html
+<header>
+  <a href="/">Nbnb</a>
+  <ul>
+    <li><a href="#">Login</a></li>
+  </ul>
+</header>
+```
+
+- {% black var %} {% endblock var %} | {% include "partials/footer.html" %} : 경로를 적어둔다.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{% block page_name %} {% endblock page_name %} | air bnb</title>
+  </head>
+  <body>
+    {% include "partials/header.html" %} {% block content %} {% endblock content
+    %} {% include "partials/footer.html" %}
+  </body>
+</html>
+```
+
+- {% extends "base.html" %} : 경로를 적어주고 +> {% block var %} {% endblock var %}
+
+```
+
+{% extends "base.html" %}
+
+{% block page_name %}
+  Home
+{% endblock page_name %}
+
+{% block content %}
+  {% for room in rooms  %}
+    <h4> {{room.name }}</h4>
+  {% endfor %}
+{% endblock content %}
+
+
+```
