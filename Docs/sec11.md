@@ -109,6 +109,7 @@ Returns a Page object with the given 1-based index, while also handling out of r
 ```
 
 - Page object : object_list | number | paginator.num_pages
+- django template에서는 함수를() 라고 호출을 안해도 된다. 매직
 
 ```python
 
@@ -141,7 +142,70 @@ Returns a Page object with the given 1-based index, while also handling out of r
 
 # 11.5 get_page vs page (9:58)
 
+[참조](https://docs.djangoproject.com/en/3.0/ref/paginator/#django.core.paginator.InvalidPage)
+
+- get_page는 모든 애러를 잡아주는대신, 페이지범위를 벗어나면 다른페이지를 보여주거나 등의 기능은 추가를 못한다.
+- 반면 page는 예외처리로 더 많이 가능하다.
+
+```
+    rooms = paginator.get_page(page) vs  rooms = paginator.page(page)
+```
+
+```
+Paginator.get_page(number)[source]¶
+Returns a Page object with the given 1-based index, while also handling out of range and invalid page numbers.
+If the page isn’t a number, it returns the first page. If the page number is negative or greater than the number of pages, it returns the last page.
+Raises an EmptyPage exception only if you specify Paginator(..., allow_empty_first_page=False) and the object_list is empty.
+
+Paginator.page(number)[source]¶
+Returns a Page object with the given 1-based index. Raises InvalidPage if the given page number doesn’t exist.
+```
+
+- page에서 나올수 있는 3가지 애러 => 핸들링으로 리다이렉트
+
+```
+exception InvalidPage
+A base class for exceptions raised when a paginator is passed an invalid page number.
+
+The Paginator.page() method raises an exception if the requested page is invalid (i.e. not an integer) or contains no objects. Generally, it’s enough to catch the InvalidPage exception, but if you’d like more granularity, you can catch either of the following exceptions:
+
+exception PageNotAnInteger
+Raised when page() is given a value that isn’t an integer.
+
+exception EmptyPage
+Raised when page() is given a valid value but no objects exist on that page.
+
+Both of the exceptions are subclasses of InvalidPage, so you can handle them both with except InvalidPage.
+```
+
+- 고아 = 남는 inst | if page 단위 10, 총 32개, -> 3페이지 + 2 고아 , 마지막페이지에 12개 아이템을 다 보여준다 | orphans =5 면 15개까지 ~
+
+```
+    paginator = Paginator(room_list, 10, orphans=5)
+```
+
 # 11.6 Handling Exceptions (5:01)
+
+```
+from django.shortcuts import render, redirect
+from django.core.paginator import Paginator, EmptyPage
+from . import models
+
+def all_rooms(request):
+
+    page = request.GET.get("page", 1)
+    room_list = models.Room.objects.all()
+    paginator = Paginator(room_list, 10, orphans=5)
+    try:
+        rooms = paginator.page(int(page)) #얻어온 page정보로 | 숫자,문자,"", 뭐든 올수 있는데,
+        return render(request, "rooms/home.html", {"page": rooms}) #잘왔으면 페이지 보여주기
+    except EmptyPage:
+        return redirect("/") #범위를 벗어난 페이지면 HOME으로 리다이렉트
+    except ValueError:
+        return redirect("/") #문자를 넣으면 ->  HOME으로 리다이렉트
+    except Exception:
+        return redirect("/") #그외 애러 ->  HOME으로 리다이렉트
+```
 
 # 11.7 Class Based Views (11:25)
 
