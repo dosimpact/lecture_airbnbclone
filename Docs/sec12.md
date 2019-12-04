@@ -63,7 +63,55 @@ def room_detail(request, pk):
 
 # 12.1 get_absolute_url (4:07)
 
+- rooms의 하나의 인스턴스로 admin에 들어갔을떄 view on site라는 버튼을 통해서 detail 프론트 페이지로 연결할수있다.
+- from django.urls import reverse === {% url "rooms:detail" %} | reverse( namespace:name , kwargs..)
+
+```
+#rooms - model의 overide되는 함수 : get_absolute_url
+    def get_absolute_url(self):
+        return reverse("rooms:detail", kwargs={"pk": self.pk})
+```
+
 # 12.2 room_detail FBV finished (8:03)
+
+- http://localhost:8000/rooms/117 에서 없는 방번호로 url접근하면 DoesNotExist 애러 발생 -> 집으로 리버스 리다이렉트 시킨다.
+  [참고 문서](https://docs.djangoproject.com/en/3.0/ref/models/instances/#doesnotexist)
+
+### room - view
+
+```python
+def room_detail(request, pk):
+    try:
+        room = models.Room.objects.get(pk=pk) #pk를 통해서 방을 얻어옴
+        return render(request, "rooms/detail.html", context={"room": room}) #랜더
+    except models.Room.DoesNotExist: #예외
+        return redirect(reverse("core:home"))
+```
+
+### room_detail.html
+
+```html
+{% extends "base.html" %} {% block page_name %} Detail {% endblock page_name %}
+{% block content %}
+<div>
+  <h1>{{room.name}}</h1>
+  <h3>{{room.description}}</h3>
+</div>
+<div>
+  <h2>
+    By: {{room.host.username}} {% if room.host.superhost %} (superhost) {% endif
+    %}
+  </h2>
+  <h3>Amenities</h3>
+  <ul>
+    {% for a in room.amenity.all %}
+    <li>{{a}}</li>
+    {% endfor %}
+  </ul>
+  ...
+</div>
+{% endblock content %}
+```
 
 # 12.3 Http404() (4:33)
 

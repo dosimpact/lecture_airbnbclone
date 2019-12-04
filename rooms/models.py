@@ -1,5 +1,6 @@
 from django.db import models  # 1.장고 관련 된것을 모두 임포트
 from core import models as core_models  # 2. 서드파티 패키지 임포트
+from django.urls import reverse
 from django_countries.fields import CountryField  # 3. 그다음 내가 만든것 임포트
 from users import models as user_models
 
@@ -91,6 +92,9 @@ class Room(core_models.TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("rooms:detail", kwargs={"pk": self.pk})
 
     def total_rating(self):
         all_reviews = self.reviews.all()

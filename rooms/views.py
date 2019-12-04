@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 from django.views.generic import ListView
+from django.urls import reverse
 from . import models
 
 
@@ -13,8 +14,11 @@ class HomeView(ListView):
 
 
 def room_detail(request, pk):
-    print(pk)
-    return render(request, "rooms/room_detail.html")
+    try:
+        room = models.Room.objects.get(pk=pk)
+        return render(request, "rooms/detail.html", context={"room": room})
+    except models.Room.DoesNotExist:
+        return redirect(reverse("core:home"))
 
 
 def all_rooms(request):
@@ -31,3 +35,4 @@ def all_rooms(request):
         return redirect("/")
     except Exception:
         return redirect("/")
+
