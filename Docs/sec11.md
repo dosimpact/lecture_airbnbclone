@@ -209,4 +209,59 @@ def all_rooms(request):
 
 # 11.7 Class Based Views (11:25)
 
+[참조 문서](https://docs.djangoproject.com/en/3.0/ref/class-based-views/generic-display/#listview)
+[참조 문서2](https://ccbv.co.uk/projects/Django/2.2/django.views.generic.list/ListView/)
+
+- 클래스 기반 뷰 장점은 이미 만들어진 뷰에 몇가지 설정만하면 사용가능 | 지금까지는 def함수기반으로 render를 리턴했음 |
+  class based vies --> list view,( django는 많은 abstract를 가지고 있다. model도 그렇고 view 도 그렇다. )
+
+아니잇, ListView에 model을 Room을 넣었더니, templates폴더에서 알아서 room_list.html을 찾아본다.
+단순히 설정만 했는데, 다 있어, paginator는 page_obj 라는 이름으로 이미 있어!!
+
+```
+#클래스 기반의 뷰를 사용하려면, .as_view()라고 연결
+urlpatterns = [path("", room_views.HomeView.as_view(), name="home")]
+```
+
+```
+from django.views.generic import ListView
+
+class HomeView(ListView):
+    model = models.Room #모델연결
+    paginate_by = 10 #페이지네이트 설정
+    paginate_orphans = 5 #고아
+    ordering = "created" #정렬 by 모델명
+    page_kwarg = "page" #page=1 -> 페이지네이트
+```
+
+```
+
+{% extends "base.html" %}
+
+{% block page_name %}
+  Home
+{% endblock page_name %}
+
+{% block content %}
+
+  {% for room in object_list  %}
+    <h4> {{room.name }} / {{room.price}}</h4>
+  {% endfor %}
+
+
+  {% if page_obj.has_previous %}
+    <a href="?page={{page_obj.number|add:-1}}">Previous</a>
+  {% endif %}
+
+  Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+
+  {% if page_obj.has_next  %}
+      <a href="?page={{page_obj.number|add:1}}">Next</a>
+  {% endif %}
+
+{% endblock content %}
+
+
+```
+
 # 11.8 Class Based Views part Two (7:37)
