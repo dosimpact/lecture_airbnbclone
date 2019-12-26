@@ -74,7 +74,7 @@ def room_detail(request, pk):
 
 # 12.2 room_detail FBV finished (8:03)
 
-- http://localhost:8000/rooms/117 에서 없는 방번호로 url접근하면 DoesNotExist 애러 발생 -> 집으로 리버스 리다이렉트 시킨다.
+- http://localhost:8000/rooms/117 에서 없는 방번호로 url접근하면 DoesNotExist 애러 발생 -> core:home으로 리버스 리다이렉트 시킨다.  
   [참고 문서](https://docs.djangoproject.com/en/3.0/ref/models/instances/#doesnotexist)
 
 ### room - view
@@ -84,7 +84,7 @@ def room_detail(request, pk):
     try:
         room = models.Room.objects.get(pk=pk) #pk를 통해서 방을 얻어옴
         return render(request, "rooms/detail.html", context={"room": room}) #랜더
-    except models.Room.DoesNotExist: #예외
+    except models.Room.DoesNotExist: #예외 - 없는pk를 요청시
         return redirect(reverse("core:home"))
 ```
 
@@ -115,18 +115,22 @@ def room_detail(request, pk):
 
 # 12.3 Http404() (4:33)
 
-- 디버그 모드는 False, allowed host는 "\*"로 다 접속 가능하게 한다.~
+- 디버그 모드는 False, allowed host는 "\*"로 설정 -> 다 접속 가능하게 한다.~
 - 서버애러는 500 , NOT Found는 404 이다.
-- url난동을 부리면 raise를 해준다. http404를, 만약 이처리를하지않고, 예외가 발생하면 서버애러->500이다.
+- url난동을 부리면 404d애러를 raise 해준다. 만약 처리를하지않으면 DoesNotExist 예외가 발생하면: 서버애러이다. 즉 500이다.
 
-```
+- ex)존재하지 않는page를 요청할때 애러
+
+```python
 from django.http import Http404
-    raise Http404()
+...
+    except models.Room.DoesNotExist:
+        raise Http404()
 ```
 
-- 반드시 404.html이름으로 templates폴더에 있어야 한다.
+- 반드시 404.html이름으로 templates폴더에 있어야 한다. 자동으로 다음의 404.html을 띄어준다.
 
-```
+```python
 {% extends "base.html" %}
 
 {% block page_name %}
@@ -146,8 +150,10 @@ ALLOWED_HOSTS = "*"
 
 # 12.4 Using DetailView CBV (6:33)
 
-- detail뷰에서 model은 room또는 object 로 template에서 사용가능
-- detail뷰에서 자동으로 pk를 인자를 받고, room에서 그를 얻어옴
+- when? 하나의 모델인스턴스만 가지고 페이지를 만들때! eg) room상세정보
+- detail뷰 구조 : pk(urls) -> view전달 -> 하나의 object만 가지고 -> 템플릿 자동연결. room_detail | 모델이름+detail(view제너릭이름)
+- detail뷰에서 model은 -> 템플릿으로 자동전달 : room | object 로 자동 명명됨.
+- detail뷰 사용시: 없는 pk시 알아서 404 not found처리해준다.
 
 ### http://localhost:8000/rooms/52 요청시 pk = 52
 
@@ -162,7 +168,7 @@ urlpatterns = [path("<int:pk>", views.RoomDetail.as_view(), name="detail")] #pk�
 ```python
 class RoomDetail(DetailView):
     model = models.Room #쿼리셋 지정
-    pk_url_kwarg = "pk" #자동으로 pk라는 장룰변수로 쿼리를 얻어온다.
+    pk_url_kwarg = "pk" #자동으로 pk라는 장룰변수로 쿼리를 얻어온다.(<int:pk> 변수명이 일치한다면 생략가능)
 ```
 
 ### templates - room_detail.html (명명 장룰)
@@ -170,4 +176,5 @@ class RoomDetail(DetailView):
 ```html
 <h1>{{object.name}}</h1>
 <h3>{{room.description}}</h3>
+room.host.username room.amenity.all...으로 페이지 꾸미면됨.
 ```

@@ -330,7 +330,7 @@ def plus(a, b, *args, **kwargs):
 
 plus(1, 2)
 plus(1, 2, 3, 4, 5)
-plus(1, 2, 3, 4, 5, z1=1, z2=2, z3=3)  # a= 1 이런식으로 주면 모호함(애러)
+plus(1, 2, 3, 4, 5, z1=1, z2=2, z3=3)  # 만약 변수명을 a = 1 이런식으로 주면, 모호함(애러|원래 인자 a 인지 kwargs a인지 모름.)
 ```
 
 # 8.8 Intercepting Model save() and admin_save() (9:51)

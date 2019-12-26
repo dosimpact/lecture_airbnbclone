@@ -112,3 +112,44 @@ class CustomUserAdmin(UserAdmin):  # class CustomUserAdmin(admin.ModelAdmin):
 # 3.5 UserAdmin + CustomAdmin (6:15)
 
 # 3.6 RECAP OMG! (11:02)
+
+# 추가학습 데코레이터란?
+
+- WHEN USER IT : 데코레이터는대상함수를 wrap하고, 앞뒤에 추가적인 기능들을 꾸밀수있다.
+- Example : 많은 함수들을 만들었는데, 이들의 성능을 측정하기 위해, 시작할때 시간기록, 끝날때 시간 기록을 하고 싶다.
+- 원래는 : 많은 함수들 마다. 시작점과 끝에 시간을 기록하는 코드를 넣어야 되지만...
+- 데코레이터: 를 이용하면, 함수위에 살포시 선언만해주면 함수 앞뒤에 시간기록 코드를 붙일 수 있다.!!!
+
+```python
+import datetime
+
+class DatetimeDecorator:
+        def __init__(self, f):
+                self.func = f
+
+        def __call__(self, *args, **kwargs):
+                print datetime.datetime.now()
+                self.func(*args, **kwargs)
+                print datetime.datetime.now()
+
+
+class MainClass:
+
+        @DatetimeDecorator
+        def main_function_1():
+                print "MAIN FUNCTION 1 START"
+
+        @DatetimeDecorator
+        def main_function_2():
+                print "MAIN FUNCTION 2 START"
+
+        @DatetimeDecorator
+        def main_function_3():
+                print "MAIN FUNCTION 3 START"
+
+my = MainClass()
+my.main_function_1()
+my.main_function_2()
+my.main_function_3()
+
+```

@@ -2,7 +2,7 @@
 
 # 2.0 프로젝트 시작하기
 
-```
+```js
 django-admin startproject airbnb-clone 대신에
 django-admin startproject config 을 실행한다.
 그리고 config안의 파일들을 최상위 루트로 모두 뺀다.
@@ -16,7 +16,7 @@ django-admin startapp conversations | lists | reservatons | reviews | rooms |  u
 - Python pep는 파이썬 스타일 규정이다. 이를 자동으로 만들어주는것이 linter이다.
 - Linter으로 pylint랑 flake8이 있다. flake8를 쓴다. settings.json을 통해 확인.
 
-```
+```js
 {
     "python.pythonPath": "C:\\Users\\Dos\\AppData\\Local\\Continuum\\anaconda3\\envs\\djangostack\\python.exe",
     "python.linting.pylintEnabled": false,
@@ -27,7 +27,7 @@ django-admin startapp conversations | lists | reservatons | reviews | rooms |  u
 
 - Formatter은 코드를 저장할때 예쁘게 바꿔주는것이다. black을 사용한다. settings.json 에 추가.
 
-```
+```js
 pip install black
 
 {
@@ -38,7 +38,7 @@ pip install black
 
 - settings.py 를 보면 애러가 4개가 있는데, 코드줄이 너무 길다는 메시지다. 지금은 모니터로 다 보이므로 이런애러메시지는 제거하자. settings.json 에 추가.
 
-```
+```js
 {
     "python.linting.flake8Args":["--max-line-length=88"]
 }
@@ -50,7 +50,7 @@ pip install black
 
 # 2.3
 
-```
+```js
 manage.py runserver
 manage.py createsuperuser
 manage.py makemigrations

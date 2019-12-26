@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
+from django_countries import countries
 from django.views.generic import ListView, DetailView
 from django.urls import reverse
 from django.http import Http404
@@ -42,4 +43,16 @@ def all_rooms(request):
         return redirect("/")
     except Exception:
         return redirect("/")
+
+
+def search(request):
+    print(vars(request.GET))
+    city = request.GET.get("city", "Anywhere")
+    city = str.capitalize(city)
+    room_types = models.RoomType.objects.all()
+    return render(
+        request,
+        "rooms/search.html",
+        {"city": city, "countries": countries, "room_types": room_types},
+    )
 

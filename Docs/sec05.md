@@ -4,7 +4,7 @@
 
 - review 모델 작성
 
-```
+```python
 from django.db import models
 from core import models as core_models
 
@@ -29,7 +29,7 @@ class Review(core_models.TimeStampModel):
 - django relationship은 대단해서, foreignkey를 . 으로 참조가 가능하다.!!
 - f"" 으로 formatter을 사용할 수 있다.!!
 
-```
+```python
     def __str__(self):
         return f"{self.review} - {self.room.name}"
 
@@ -37,7 +37,7 @@ class Review(core_models.TimeStampModel):
 
 # 5.1 Reservations Model (7:50)
 
-```
+```python
 @admin.register(models.Reservation)
 class ReservationAdmin(admin.ModelAdmin):
 
@@ -46,7 +46,7 @@ class ReservationAdmin(admin.ModelAdmin):
     pass
 ```
 
-```
+```python
 class Reservation(core_models.TimeStampedModel):
 
     """ Reservation Model Definition """
@@ -73,7 +73,7 @@ class Reservation(core_models.TimeStampedModel):
         return f"{self.room} - {self.check_in}"
 ```
 
-```
+```python
     "reservations.apps.ReservationsConfig",
 ```
 
@@ -107,7 +107,7 @@ class List(core_models.TimeStampedModel):
 
 - make conversation model
 
-```
+```python
 class Conversation(core_models.TimeStampModel):
     """ Conversation Model Definition """
 

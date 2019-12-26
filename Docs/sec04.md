@@ -65,7 +65,7 @@ class RoomAdmin(admin.ModelAdmin):
 
 ```
 
-# 4.2 Foreing Keys like a Boss (6:24)
+# 4.2 foreign keys like a Boss (6:24)
 
 - model.ForeignKey 관계는 , 사용자와 인스타그램 post관계. 1(user):N(poster) 와 같은 관계이다. 인스턴스들이 맺고있는 관계를 생각해보면 된다.
 
